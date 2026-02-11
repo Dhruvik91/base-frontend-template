@@ -1,194 +1,159 @@
-# 🧠 AI Development Guidelines – Enterprise Next.js Project
+# 🧠 AI Development Guidelines – Enterprise Next.js Platform
 
-These rules MUST be followed for all AI-generated code.
-
----
-
-# 1️⃣ Core Stack
-
-- Framework: Next.js (App Router)
-- Language: TypeScript (strict mode)
-- Styling: Tailwind CSS
-- UI Library: shadcn/ui
-- Data Fetching: React Query (@tanstack/react-query)
-- Forms: React Hook Form
-- Validation: Zod
-- Toast System: Sonner
-- Date Handling: date-fns
-- Architecture: Smart / Dumb Component Pattern
+These rules MUST be followed for all AI-generated code.  
+**No exceptions.**
 
 ---
 
-# 2️⃣ Architecture Pattern
+## 1️⃣ Core Stack
 
-## Smart Components
-- Handle:
-  - React Query calls
-  - Mutations
-  - Form submission logic
-  - Data transformation
+- **Framework:** Next.js (App Router)
+- **Language:** TypeScript (strict mode)
+- **Styling:** Tailwind CSS
+- **UI Library:** shadcn/ui
+- **Data Fetching:** React Query (@tanstack/react-query)
+- **Forms:** React Hook Form
+- **Validation:** Zod
+- **Toast System:** Sonner
+- **Date Handling:** date-fns
+- **Motion Library:** Framer Motion
+- **Architecture:** Smart / Dumb Component Pattern
+
+---
+
+## 2️⃣ Architecture Pattern
+
+### Smart Components (Container)
+
+Handle:
+- React Query calls
+- Mutations
+- Form submission logic
+- Data transformation
+
+Rules:
 - No heavy UI markup
 - Located in:
-  - /features/*
+  - `/features/*`
   - Route-level containers
 
-## Dumb Components
-- Pure presentational
+---
+
+### Dumb Components (Presentational)
+
+- Pure UI
 - No API calls
 - No business logic
 - Fully typed props
-- Reusable
+- Reusable & composable
 - Located in:
-  - /components/ui
-  - /components/shared
+  - `/components/ui`
+  - `/components/shared`
 
-Never mix business logic with UI.
-
----
-
-# 3️⃣ React Query Rules (MANDATORY)
-
-- NEVER use fetch inside useEffect
-- Always use:
-  - useQuery
-  - useMutation
-  - useInfiniteQuery when needed
-- All queries must:
-  - Have stable query keys
-  - Handle loading state
-  - Handle error state
-  - Handle empty state
-- Use optimistic updates where appropriate
-- Invalidate queries properly
-- Configure staleTime intentionally
-- Create reusable hooks inside:
-  - /hooks/queries
+⚠ Never mix UI with business logic.
 
 ---
 
-# 4️⃣ Forms Standard (React Hook Form + Zod)
+## 3️⃣ React Query Rules (MANDATORY)
 
-## Form Rules
+- NEVER fetch inside `useEffect`
+- Always use `useQuery` / `useMutation` / `useInfiniteQuery`
+- Stable query keys required
+- Handle loading, error, and empty states
+- Use optimistic updates when appropriate
+- Invalidate queries correctly
+- Configure `staleTime` intentionally
+- All queries must live inside reusable hooks:
+  - `/hooks/queries`
+
+---
+
+## 4️⃣ Forms Standard (React Hook Form + Zod)
+
+### Form Rules
 
 - ALWAYS use React Hook Form
-- NEVER manage complex form state with useState
-- All forms MUST:
-  - Use zodResolver
-  - Have schema validation using Zod
-  - Infer types from Zod schema
-  - Show validation errors clearly
-  - Disable submit while submitting
+- NEVER manage complex forms with `useState`
+- Use `zodResolver`
+- Infer types from schema
+- Disable submit during submission
+- Display accessible error messages
 
-## Validation Rules (Zod)
+### Validation Rules
 
-- All schemas must live in:
-  - /lib/validations
+- Schemas live in: `/lib/validations`
 - Never duplicate validation logic
-- Use proper error messages
-- Use refine() for complex validation
-- Keep schemas reusable
+- Use `refine()` when necessary
+- Schemas must be reusable
 
 ---
 
-# 5️⃣ Toast Rules (Sonner)
+## 5️⃣ Toast Rules (Sonner)
 
 - Use Sonner for:
-  - Success messages
-  - Error messages
-  - Warning messages
-- Never use alert()
-- Never expose raw backend errors
-- Toasts must be:
-  - Short
-  - Clear
-  - User-friendly
-
-Trigger toast inside:
-- Mutation onSuccess
-- Mutation onError
+  - Success
+  - Error
+  - Warning
+- Never use `alert()`
+- Never expose backend stack traces
+- Toasts must be short & user-friendly
+- Trigger inside mutation lifecycle
 
 ---
 
-# 6️⃣ Date Handling Rules (date-fns) – MANDATORY
+## 6️⃣ Date Handling (date-fns)
 
-## General Rules
-
-- NEVER use native Date formatting manually
+- NEVER use native Date formatting
 - NEVER use moment.js
-- ALWAYS use date-fns utilities
-- All date utilities must live in:
-  - /lib/date.ts
-
-## Formatting Rules
-
-- Use format() for UI formatting
-- Use parseISO() for parsing API dates
-- Use differenceInDays(), differenceInMinutes(), etc. for calculations
-- Use isBefore(), isAfter() for comparisons
-- Use startOfDay(), endOfDay() for boundary logic
-
-## Timezone Rules
-
-- Backend must return ISO strings
-- Always parse using parseISO()
-- Avoid implicit timezone assumptions
-- Display dates in user’s locale if required
-
-## UI Date Standards
-
-- Always format dates for readability:
-  - Example: "dd MMM yyyy"
-  - Example: "PPP" pattern
-- Never show raw ISO strings in UI
-- Date formatting must be centralized in helper functions
-
-Example:
-- formatDate()
-- formatDateTime()
-- formatRelativeTime()
+- Always use date-fns
+- All utilities in: `/lib/date.ts`
+- Parse ISO via `parseISO()`
+- Use `format()`, `differenceIn*`, `isBefore()`, `isAfter()`
+- Never show raw ISO strings
+- Always format for readability
+- Support locale-aware formatting
 
 ---
 
-# 7️⃣ shadcn/ui Rules
+## 7️⃣ shadcn/ui Standards
 
 - Use shadcn components only
-- Extend using className
-- Do not edit core files
+- Extend via `className`
+- Never edit core files
 - Maintain built-in accessibility
-- Use consistent variants
-- Follow design token system
+- Use consistent variant patterns
 
 ---
 
-# 8️⃣ Responsiveness
+## 8️⃣ Responsiveness
 
-- Mobile-first approach
-- No fixed widths
+- Mobile-first
+- No fixed layouts
 - No horizontal overflow
-- Flexible grid and flex layouts
-- Proper spacing system (8px scale)
-- Works from 320px to 2xl screens
+- Flexible grid & flex
+- 8px spacing system
+- Works 320px → 2xl
 
 ---
 
-# 9️⃣ Accessibility (NON-NEGOTIABLE)
+## 9️⃣ Accessibility (NON-NEGOTIABLE)
 
 - Semantic HTML required
-- ARIA labels where necessary
-- aria-invalid for form errors
+- Proper ARIA labels
+- `aria-invalid` for forms
 - Keyboard accessible
 - Visible focus states
-- WCAG AA contrast compliance
-- Proper alt text
+- WCAG AA contrast
+- Reduced motion support
 - Never rely only on color
 
-Forms must be fully accessible.
+Accessibility overrides aesthetics.
 
 ---
 
-# 🔟 SEO (App Router)
+## 🔟 SEO (App Router)
 
-- Use generateMetadata()
+- Use `generateMetadata()`
 - Include:
   - title
   - description
@@ -198,33 +163,33 @@ Forms must be fully accessible.
 - Proper heading hierarchy
 - Structured data (JSON-LD)
 - Canonical URLs
-- Optimize images with Next/Image
+- Optimize images (Next/Image)
 
 ---
 
-# 1️⃣1️⃣ GEO (AI Discoverability)
+## 1️⃣1️⃣ GEO (AI Discoverability)
 
-- Clear structured headings
+- Structured headings
+- Intent-driven content
 - Short summaries
 - FAQ sections when relevant
-- Intent-driven content
-- Machine-readable structure
-- Avoid ambiguous text
+- Machine-readable formatting
+- Avoid vague language
 
 ---
 
-# 1️⃣2️⃣ Dark & Light Theme
+## 1️⃣2️⃣ Dark & Light Theme
 
 - Class-based theming
-- Persist theme in localStorage
-- Follow system preference
+- Persist preference in localStorage
+- Follow system preference by default
 - No hardcoded colors
-- Use design tokens
-- Ensure accessibility in both themes
+- Token-based theming
+- Full accessibility in both modes
 
 ---
 
-# 1️⃣3️⃣ Glassmorphism
+## 1️⃣3️⃣ Glassmorphism
 
 - backdrop-blur
 - Semi-transparent backgrounds
@@ -234,58 +199,251 @@ Forms must be fully accessible.
 
 ---
 
-# 1️⃣4️⃣ Neumorphism
+## 1️⃣4️⃣ Neumorphism
 
 - Soft shadows
 - Subtle elevation
-- Minimal use
-- Never reduce contrast
+- Minimal usage
+- Must not reduce contrast
 
 ---
 
-# 1️⃣5️⃣ Performance
+## 1️⃣5️⃣ CSS Performance & Smooth UX
 
-- Prefer Server Components
-- Client Components only when needed
-- Lazy load heavy components
-- Avoid unnecessary re-renders
-- Optimize images
-- Avoid layout shifts
-- Lighthouse target 90+
+### Scrolling
+- `scroll-behavior: smooth`
+- Avoid scroll jank
+- Use IntersectionObserver over scroll listeners
+- Passive event listeners
 
----
+### Animation Rules
+Only animate:
+- `transform`
+- `opacity`
 
-# 1️⃣6️⃣ Code Quality
+Never animate layout properties.
 
-- Strict TypeScript
-- No any
-- Reusable utilities
-- Centralized API layer
-- No duplicated logic
-- Proper error handling
-- No console.log in production
+### GPU Optimization
+- Use `translate3d()` / `translateZ(0)`
+- Avoid layout thrashing
+- Use `will-change` sparingly
+- Remove `will-change` when not needed
 
----
+### Reduced Motion
+- Respect `prefers-reduced-motion`
+- Disable parallax & heavy motion
 
-# 🚫 DO NOT
-
-- Fetch data inside UI components
-- Use native Date formatting
-- Show raw ISO strings
-- Break accessibility
-- Hardcode colors
-- Mix business logic with UI
-- Ignore loading/error states
+🎯 Target: 60fps.
 
 ---
 
-# ✅ Priority Order
+## 1️⃣6️⃣ Motion Design System (Framer Motion)
 
-1. Accessibility
-2. Performance
-3. Clean Architecture
-4. Scalability
-5. SEO
-6. Maintainability
+- Use single motion library
+- Centralize variants in `/lib/motion.ts`
+- Never hardcode animation values
+- Define `initial` / `animate` / `exit` / `transition`
 
-All AI-generated code MUST follow these rules strictly.
+### Duration
+- 150–300ms (micro)
+- 250–400ms (page)
+- Never exceed 500ms
+
+---
+
+## 1️⃣7️⃣ Page Transition Architecture
+
+- Use `AnimatePresence` correctly
+- Wrap in `layout.tsx`
+- Avoid layout remounting
+- Use subtle fade + translateY
+- No blocking transitions
+- Preserve scroll when appropriate
+- Use skeleton loaders instead of spinners
+
+---
+
+## 1️⃣8️⃣ Animation Token System
+
+Centralize in:  
+`/styles/animation-tokens.ts`
+
+Tokens:
+- duration-fast
+- duration-base
+- duration-slow
+- ease-standard
+- ease-accelerate
+- ease-decelerate
+
+Never hardcode duration/easing.
+
+---
+
+## 1️⃣9️⃣ Performance Budgeting
+
+### JS
+- Minimal initial bundle
+- Code split aggressively
+- Avoid heavy libraries
+
+### CSS
+- Minimal global CSS
+- Avoid unused utilities
+
+### Images
+- Use WebP/AVIF
+- Compress assets
+- Lazy load non-critical images
+
+### Targets
+- Lighthouse ≥ 90
+- Minimal CLS
+- No long tasks > 200ms
+
+---
+
+## 2️⃣0️⃣ Real User Monitoring (RUM)
+
+Track:
+- LCP
+- CLS
+- INP/FID
+- TTFB
+- Route transition time
+- API latency
+- JS runtime errors
+
+- Monitor regressions
+- Log slow endpoints
+- Track performance by device/network
+
+Performance must be measured continuously.
+
+---
+
+## 2️⃣1️⃣ Design Token System
+
+All styling must use tokens.
+
+### Color Tokens
+- primary
+- secondary
+- accent
+- success
+- warning
+- error
+- muted
+- background
+- foreground
+- border
+
+Never hardcode hex values.
+
+### Spacing Scale (8px grid)
+- space-1 → space-16
+
+### Typography Scale
+- text-xs → text-5xl
+- font-regular → font-bold
+
+### Radius Tokens
+- radius-sm → radius-2xl
+
+### Shadow Tokens
+- shadow-xs → shadow-xl
+
+---
+
+## 2️⃣2️⃣ RBAC UI Rendering Rules
+
+- Never render unauthorized UI
+- Centralized permissions in `/lib/permissions.ts`
+- Use `useHasPermission()` / `useHasRole()`
+- Protect routes at layout level
+- Do not fetch restricted data
+- Frontend RBAC complements backend validation
+
+---
+
+## 2️⃣3️⃣ Security-First Standards
+
+### XSS Prevention
+- No dangerous HTML without sanitization
+- Escape dynamic content
+
+### Sensitive Data
+- Never expose tokens
+- Prefer HTTP-only cookies
+- Do not store secrets in localStorage
+
+### API Security
+- Centralized API client
+- Handle 401 properly
+- Logout on invalid session
+
+### Error Handling
+- No stack traces to users
+- Friendly error mapping
+
+### Headers
+- CSP
+- HSTS
+- X-Frame-Options
+- X-Content-Type-Options
+
+---
+
+## 2️⃣4️⃣ Testing Architecture
+
+### Unit Testing
+- Vitest/Jest + React Testing Library
+- Test hooks, utilities, schemas, permissions
+
+### Integration Testing
+- Test form flows
+- Test mutations
+- Test RBAC rendering
+
+### E2E Testing
+- Playwright
+- Test auth flows
+- Test protected routes
+- Test critical journeys
+- Test page transitions
+
+### Visual Regression
+- Playwright snapshots or Chromatic
+- Validate dark/light mode
+
+Avoid fake coverage.
+
+---
+
+## 🚫 Strictly Forbidden
+
+- Mixing UI & business logic
+- Native Date formatting
+- Hardcoded colors
+- Animating layout properties
+- Overusing `will-change`
+- Exposing backend errors
+- Ignoring accessibility
+- Ignoring performance regressions
+
+---
+
+## 🏁 Final Engineering Standard
+
+The platform must feel:
+
+- Fluid
+- Fast
+- Secure
+- Accessible
+- Scalable
+- Maintainable
+- Premium
+- Intentional
+
+If it feels janky, insecure, inconsistent, or unstructured — refactor it.
